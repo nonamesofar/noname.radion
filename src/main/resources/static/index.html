@@ -1,0 +1,126 @@
+<!doctype html>
+<html ng-app="playlist">
+<head>
+    <title>noname.fm</title>
+
+    <!-- overridden css -->
+    <link href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/darkly/bootstrap.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/fonts.css" rel="stylesheet">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+
+    <script src="js/media-player.js"></script>
+    <script src="js/dragdrop.js"></script>
+    <script src="js/playlist.js"></script>
+    <script src="js/utils.js"></script>
+
+    <style>
+        h1 {
+            font-family: "Urban Jungle"
+            };
+        p.customfont {
+            font-family: "Urban Hook"
+        };
+    </style>
+</head>
+
+<body>
+
+<div ng-controller="InteractiveController">
+
+    <div class="jumbotron">
+        <h1>noname <span style="color:red">fm</span></h1>
+        <p class="customfont">
+            Independent indie radio.
+        </p>
+    </div>
+
+    <audio media-player="mediaPlayer" data-playlist="audioPlaylist">
+        <!--<source src="http://bucd401:8090/listen" type="audio/mp3">-->
+    </audio>
+
+
+    <div class="player-control">
+        <div class="btn" ng-click="mediaPlayer.play()">
+            <span>Simple Play</span>
+            <i class="fa fa-play"></i>
+        </div>
+        <div class="btn" ng-click="mediaPlayer.playPause()">
+            <i class="fa" ng-class="{ 'fa-pause': mediaPlayer.playing, 'fa-play': !mediaPlayer.playing }"></i>
+        </div>
+        <div class="btn" ng-click="mediaPlayer.next()">
+            <span>Next</span>
+            <i class="fa fa-step-forward"></i>
+        </div>
+        <div class="btn" ng-click="mediaPlayer.prev()">
+            <i class="fa fa-step-backward"></i>
+            <span>Prev</span>
+        </div>
+        <div class="btn btn-noclick">
+            <span>currentTrack: <span class="badge">[[ mediaPlayer.currentTrack ]]</span></span>
+        </div>
+        <div class="btn btn-noclick">
+            <span><i class="fa fa-clock-o"></i>: <span class="badge">[[ mediaPlayer.formatTime ]]</span></span>
+        </div>
+        <div class="btn btn-noclick">
+            <span>volume: <span class="badge">[[ mediaPlayer.volume * 100 | number:0 ]]%</span></span>
+        </div>
+        <div class="btn" ng-click="mediaPlayer.setVolume(mediaPlayer.volume - 0.1)">
+            <span><i class="fa fa-volume-down"></i></span>
+        </div>
+        <div class="btn" ng-click="mediaPlayer.setVolume(mediaPlayer.volume + 0.1)">
+            <span><i class="fa fa-volume-up"></i></span>
+        </div>
+        <div class="progress" ng-click="mediaPlayer.seek(mediaPlayer.duration * seekPercentage($event))">
+            <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" ng-style="{ width: mediaPlayer.currentTime*100/mediaPlayer.duration + '%' }"></div>
+            <div class="time" ng-show="mediaPlayer.formatTime">
+                <span>[[ mediaPlayer.formatTime ]]</span><b>/</b><span>[[ mediaPlayer.formatDuration ]]</span>
+            </div>
+        </div>
+    </div>
+
+    <h3><i>Interactive</i> playlist</h3>
+    <p>Keep track of this demo playlist in real-time</p>
+    <p class="text-warning">You can drag songs in this table, to re-order them!</p>
+    <table class="table table-hover table-rounded table-cursor">
+        <thead>
+        <th>#</th>
+        <th>Src</th>
+        <th>Type</th>
+        </thead>
+        <tbody>
+        <tr ng-repeat="song in audioPlaylist" ng-click="mediaPlayer.playPause($index)" ng-class="{ active: mediaPlayer.playing && mediaPlayer.currentTrack-1 === $index }"
+            ui-draggable="true" drag="song" on-drop-success="removeSong($index)" ui-on-drop="dropSong($data, $index)">
+            <td>[[ $index+1 ]]</td>
+            <td><span ng-show="song.src.length > 50">...</span>[[ song.src | limitTo:-50 ]]</td>
+            <td>[[ song.type ]]</td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <h3>Add audio track</h3>
+    <p>Just click any of those sample songs to get added to your <i>interactive</i> playlist</p>
+    <table class="table table-hover table-rounded table-cursor">
+        <thead>
+        <th>#</th>
+        <th>Artist</th>
+        <th>Title</th>
+        </thead>
+        <tbody>
+        <tr ng-repeat="song in prefabPlaylist" ng-click="addSong(song)">
+            <td>[[ $index+1 ]]</td>
+            <td>[[ song.artist ]]</td>
+            <td>[[ song.title ]]</td>
+        </tr>
+        </tbody>
+    </table>
+
+
+</div>
+
+</body>
+</html>
