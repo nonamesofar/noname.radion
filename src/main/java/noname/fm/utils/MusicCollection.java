@@ -1,11 +1,23 @@
 package noname.fm.utils;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.audio.mp3.MP3File;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.Tag;
+import org.jaudiotagger.tag.TagException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -20,22 +32,50 @@ public class MusicCollection {
 
     private final List<TrackInfo> collection = new ArrayList();
 
-    @PostConstruct
+
     //funny enough, the @Value thing is called after the constructor
     //doing a post contruct to have all the things
     //JAVA is hard
-    void buildMusicCollection(){
 
-        //something is triping and I have to new that shit
-        //tried injecting the File directly and failed so we read it like human beeings
-        File folder = new File( rootPath );
+    //this now scan the folder in the propertiest and build the list
+    //pretty smart
+    @PostConstruct
+    public void readMusicCollection() {
 
-        File[] listOfFiles = folder.listFiles();
-        for(File file : listOfFiles){
-            if(file.isFile()){
-                //temporary hack until I figure out how to DB or read MP3 tags
-                //TODO: fix this shit
-                collection.add( new TrackInfo( file.getName() ));
+        File rootDir = new File(rootPath);
+
+        File[] fileList = rootDir.listFiles();
+
+        for(File file:fileList){
+            try {
+
+                MP3File mp3File = (MP3File)AudioFileIO.read(file);
+                Tag tag = mp3File.getTag();
+
+                TrackInfo track = new TrackInfo(
+                        tag.getFirst(FieldKey.ARTIST),
+                        tag.getFirst(FieldKey.ALBUM),
+                        tag.getFirst( FieldKey.TITLE),
+                        tag.getFirst(FieldKey.YEAR),
+                        tag.getFirst(FieldKey.TRACK),
+                        tag.getFirstArtwork(),
+                        file.getName()
+                );
+
+                collection.add( track );
+
+
+            //TODO: wish I know how to handle errors
+            } catch (CannotReadException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (TagException e) {
+                e.printStackTrace();
+            } catch (ReadOnlyFileException e) {
+                e.printStackTrace();
+            } catch (InvalidAudioFrameException e) {
+                e.printStackTrace();
             }
         }
     }

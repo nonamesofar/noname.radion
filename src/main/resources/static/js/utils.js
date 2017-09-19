@@ -20,7 +20,6 @@ angular
             $http.get('http://localhost:8080/info').
                 then(function(response) {
                     $scope.trackInfo=response.data;
-                    $scope.cases = ['one', 'two', 'three', 'four', 'five'];
                 }
                 )
         }

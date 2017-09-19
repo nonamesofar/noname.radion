@@ -4,6 +4,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.jaudiotagger.tag.FieldKey;
+import org.jaudiotagger.tag.datatype.Artwork;
 
 /**
  * Created by dfeodot on 9/18/2017.
@@ -24,23 +26,31 @@ public class TrackInfo {
     private String albumName;
     private String pathToFile;
 
+    public TrackInfo() {
+
+    }
+
     public TrackInfo(String artistName, String trackName, String albumName) {
         this.artistName = artistName;
         this.trackName = trackName;
         this.albumName = albumName;
     }
 
-    //build a track file from a filemane
-    //needs parsing and regex so bleah
-    public TrackInfo(String fileName){
-        if(fileName.contains( "mp3" )) {
-            String[] splited = fileName.split( "-" );
-            artistName = splited[0];
-            albumName = splited[1]+splited[2];
-            trackName = splited[3];
-            pathToFile = fileName;
-        }
+    //    tag.getFirst(FieldKey.ARTIST),
+//            tag.getFirst(FieldKey.ALBUM),
+//            tag.getFirst( FieldKey.TITLE),
+//            tag.getFirst(FieldKey.YEAR),
+//            tag.getFirst(FieldKey.TRACK),
+//            tag.getFirstArtwork(),
+//            file.getPath()
+    public TrackInfo(String artistName, String albumName, String trackName, String year,
+                     String trackNo, Artwork artwork, String path) {
+        this.artistName = artistName;
+        this.trackName = trackName;
+        this.albumName = albumName;
+        this.pathToFile = path;
     }
+
 
     public void setArtistName(String name){
         this.artistName = name;
