@@ -29,7 +29,6 @@ public class StreamController {
     MusicCollection mCollection;
 
     @RequestMapping(value="listen", produces = "audio/mpeg")
-    @ResponseBody
     //test with http://localhost:8080/listen?id=7
     public void getTrack(@RequestParam(value="id") int id, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
@@ -53,6 +52,7 @@ public class StreamController {
             while ((readBytes = buf.read()) != -1)
                 stream.write( readBytes );
         } catch (IOException ioe) {
+            //TODO: this throwrs servlet time out - figure out what to do
             throw new ServletException( ioe.getMessage() );
         } finally {
             if (stream != null)
