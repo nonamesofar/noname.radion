@@ -1,0 +1,73 @@
+<!doctype html>
+<html ng-app="radioplaylist">
+<head>
+    <title>noname.fm</title>
+
+    <!-- overridden css -->
+    <link href="//netdna.bootstrapcdn.com/bootswatch/3.1.1/darkly/bootstrap.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+    <link href="/css/stylePlayer.css" rel="stylesheet">
+    <link href="/css/fonts.css" rel="stylesheet">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+
+    <script src="js/media-player.js"></script>
+    <script src="js/dragdrop.js"></script>
+    <script src="js/radioplaylist.js"></script>
+    <script src="js/utils.js"></script>
+
+    <style>
+        h1 {
+            font-family: "Urban Jungle"
+            };
+        p.customfont {
+            font-family: "Urban Hook"
+        };
+    </style>
+</head>
+
+<body ng-controller="BuildPlaylist">
+
+    <audio media-player="mediaPlayer" data-playlist="audioPlaylist">
+        <!--<source src="http://bucd401:8090/listen" type="audio/mp3">-->
+    </audio>
+    <!-- Top Info -->
+    <div id="title">
+        <span id="track"></span>
+        <div id="timer">0:00</div>
+        <div id="duration">0:00</div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controlsOuter">
+        <div class="controlsInner">
+            <div id="loading"></div>
+            <div class="btn" id="playBtn" ng-click="play()"></div>
+            <div class="btn" id="pauseBtn" ng-click="play()"></div>
+            <div class="btn" id="prevBtn"></div>
+            <div class="btn" id="nextBtn"></div>
+        </div>
+        <div class="btn" id="playlistBtn" ng-click="togglePlaylist()"></div>
+        <div class="btn" id="volumeBtn"></div>
+    </div>
+
+    <!-- Progress -->
+    <div id="waveform" ng-show="progress()"></div>
+    <div id="bar"></div>
+    <div id="progress"></div>
+
+    <!-- Playlist -->
+    <div id="playlist" ng-click="togglePlaylist()">
+        <div id="list"></div>
+    </div>
+
+    <!-- Volume -->
+    <div id="volume" class="fadeout">
+        <div id="barFull" class="bar"></div>
+        <div id="barEmpty" class="bar"></div>
+        <div id="sliderBtn"></div>
+    </div>
+</body>
+</html>
