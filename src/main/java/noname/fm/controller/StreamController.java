@@ -79,6 +79,7 @@ public class StreamController {
         File file = new File( rootPath + "/" + filePath );
 
         response.addHeader( "Content-Type", "audio/mpeg" );
+        response.addHeader(HttpHeaders.ACCEPT_RANGES, "bytes");
         response.addHeader( "Content-Disposition", "inline; filename=\"" + filePath + "\"" );
         response.setContentLength( (int) file.length() );
 
