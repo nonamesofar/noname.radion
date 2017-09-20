@@ -101,7 +101,7 @@ public class StreamController {
         return HttpRange.toResourceRegions(httpRanges, new InputStreamResource(cmb) {
             @Override
             public long contentLength() throws IOException {
-                return 1;
+                return (long)file.length();
             }
         });
     }
