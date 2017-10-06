@@ -12,6 +12,7 @@
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/1.4.0/wavesurfer.min.js"></script>
 
     <script src="js/media-player.js"></script>
     <script src="js/dragdrop.js"></script>
@@ -40,14 +41,16 @@
         <div id="duration">0:00</div>
     </div>
 
+    <div id="waveform"></div>
+
     <!-- Controls -->
     <div class="controlsOuter">
         <div class="controlsInner">
             <div id="loading"></div>
-            <div class="btn" id="playBtn" ng-click="play()"></div>
-            <div class="btn" id="pauseBtn" ng-click="play()"></div>
+            <div class="btn" id="playBtn" ng-click="play()" ></div>
+            <div class="btn" id="pauseBtn" ng-click="play()" ></div>
             <div class="btn" id="prevBtn"></div>
-            <div class="btn" id="nextBtn"></div>
+            <div class="btn" id="nextBtn" ng-click="next()"></div>
         </div>
         <div class="btn" id="playlistBtn" ng-click="togglePlaylist()"></div>
         <div class="btn" id="volumeBtn"></div>

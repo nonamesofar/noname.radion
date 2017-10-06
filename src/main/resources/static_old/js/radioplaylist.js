@@ -10,9 +10,12 @@ angular.module('radioplaylist', ['utils', 'ngDragDrop'])
                     i++;
                     return { src: "http://localhost:8080/listen?id=" + i, type: 'audio/ogg', artist: trackInfo.artistName, title: trackInfo.trackName};
                 });
-            track.innerHTML = $scope.prefabPlaylist[3].title;
 
-            $scope.audioPlaylist.push(angular.copy($scope.prefabPlaylist[0]));
+            $scope.index = 0;
+            //push 2 tracks in the playlist to avoid later buffering
+            $scope.audioPlaylist.push(angular.copy($scope.prefabPlaylist[$scope.index]));
+            $scope.mediaPlayer.load(false);
+            //$scope.audioPlaylist.push(angular.copy($scope.prefabPlaylist[$scope.index+1]));
 
               // Setup the playlist display.
             var playlist = $scope.prefabPlaylist;
@@ -46,6 +49,8 @@ angular.module('radioplaylist', ['utils', 'ngDragDrop'])
 
             $scope.mediaPlayer.playPause();
 
+            track.innerHTML = $scope.prefabPlaylist[$scope.index].title;
+
             // Display the duration.
             duration.innerHTML = self.$formatTime(Math.round($scope.mediaPlayer.duration));
 
@@ -57,6 +62,21 @@ angular.module('radioplaylist', ['utils', 'ngDragDrop'])
                    playBtn.style.display = 'block';
                    pauseBtn.style.display = 'none';
                 }
+
+        }
+
+        $scope.next = function() {
+            $scope.index++;
+            if($scope.audioPlaylist.length <= $scope.index){
+                //push more tracks
+                $scope.audioPlaylist.push(angular.copy($scope.prefabPlaylist[$scope.index]));
+                $scope.mediaPlayer.load($scope.prefabPlaylist[$scope.index]);
+                //$scope.audioPlaylist.push(angular.copy($scope.prefabPlaylist[$scope.index+1]));
+            }
+
+            track.innerHTML = $scope.prefabPlaylist[$scope.index].title;
+            $scope.play();
+
         }
 
          $scope.togglePlaylist = function() {
