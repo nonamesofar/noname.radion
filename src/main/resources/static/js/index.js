@@ -1,44 +1,39 @@
 "use strict";
 $(document).ready(function() {
-	var songs = [
-		{
-			"title": "Malibu",
-			"artist": "Anderson .Paak",
-			"cover": "https://i.pinimg.com/736x/0e/da/c3/0edac388bc5036fff199a62a8ef0ab03--bj-the-chicago-kid-best-album-covers.jpg",
-			"num": "0",
-			"darkColor": "#3A4E55",
-			"lightColor": "#F2F2F2"
-		},
-		{
-			"title": "Let's Get Free",
-			"artist": "Dead Prez",
-			"cover": "https://s-media-cache-ak0.pinimg.com/originals/e4/27/70/e4277010df1aa683d71014e3d97cbf98.jpg",
-			"num": "1",
-			"darkColor": "#4B3A40",
-			"lightColor": "#E0D9C6"
-		},
-		{
-			"title": "Drug Dealers",
-			"artist": "Pusha T",
-			"cover": "https://www.fuse.tv/image/5682de90a151c1fa2b00003c/768/512/pusha-t-darkest-before-dawn-album-cover-full-size.jpg",
-			"num": "2",
-			"darkColor": "#231F16",
-			"lightColor": "#FFF8E8"
-		}
-	];
+	var songs;
 
-	var nbSongs = songs.length;
+	var nbSongs;
 	var currentSong = 0;
 	var dashLength = 49;
 	var audio = null;
 	var timer = null;
 
+	function getCollection() {
+      // strUrl is whatever URL you need to call
+      var strUrl = "http://localhost:8080/getMusicCollection";
+      var strReturn = "";
+
+      jQuery.ajax({
+        url: strUrl,
+        success: function(html) {
+          strReturn = html;
+        },
+        async:false
+      });
+
+      return strReturn;
+    }
+
 	function init() {
-		// Chargement de la playlist
-		for (var i=0; i<songs.length; i++) {
-			$("<p>").html(songs[i].title + " &#183; " + songs[i].artist).appendTo($("#playlist"));
-		}
-		$("#playlist p:first-child").addClass("active");
+        //sync call to get the collection
+        songs = getCollection();
+        nbSongs = songs.length;
+
+        // Chargement de la playlist
+        for (var i=0; i<songs.length; i++) {
+        		$("<p>").html(songs[i].title + " &#183; " + songs[i].artist).appendTo($("#playlist"));
+        }
+        $("#playlist p:first-child").addClass("active");
 
 		// Chargement de la première musique
 		loadSong(1);
@@ -102,11 +97,14 @@ $(document).ready(function() {
 	function loadSong(num) {
 		currentSong = num;
 		if (audio !== null) audio.pause();
-		audio = $("#audio"+num).get(0);
+		var src="http://localhost:8080/listen?id="+currentSong;
+		$("#audioCur").attr("src", src);
+		audio = $("#audioCur").get(0);
 		on(0);
 		audio.volume = ($("#volumeSlider").get(0).value / 100).toFixed(2);
 
-		$("#album").attr("src", songs[currentSong].cover);
+        var service = "http://localhost:8080/cover?id="+currentSong;
+		$("#album").attr("src", service);
 		setTimeout( function(){
 			// Infos
 			$("#title").html(songs[currentSong].title);
