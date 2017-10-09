@@ -2,14 +2,11 @@ package noname.fm.utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;
 import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
@@ -18,6 +15,7 @@ import org.jaudiotagger.audio.mp3.MP3File;
 import org.jaudiotagger.tag.FieldKey;
 import org.jaudiotagger.tag.Tag;
 import org.jaudiotagger.tag.TagException;
+import org.jaudiotagger.tag.datatype.Artwork;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +29,7 @@ public class MusicCollection {
     private String rootPath;
 
     private final List<TrackInfo> collection = new ArrayList();
+    private final List<Artwork> artCollection = new ArrayList();
 
 
     //funny enough, the @Value thing is called after the constructor
@@ -51,6 +50,7 @@ public class MusicCollection {
 
                 MP3File mp3File = (MP3File)AudioFileIO.read(file);
                 Tag tag = mp3File.getTag();
+                //do you even check for null?!
 
                 TrackInfo track = new TrackInfo(
                         tag.getFirst(FieldKey.ARTIST),
@@ -61,6 +61,8 @@ public class MusicCollection {
                         tag.getFirstArtwork(),
                         file.getName()
                 );
+
+                artCollection.add( tag.getFirstArtwork() );
 
                 collection.add( track );
 
@@ -78,6 +80,10 @@ public class MusicCollection {
                 e.printStackTrace();
             }
         }
+    }
+
+    public byte[] getArtAsBytes(int i){
+        return artCollection.get( i ).getBinaryData();
     }
 
     public List<TrackInfo> getCollection(){
