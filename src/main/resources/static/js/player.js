@@ -29,6 +29,14 @@ $(document).ready(function() {
         songs = getCollection();
         nbSongs = songs.length;
 
+        setTimeout( function(){
+            $('.container').addClass('loaded');
+        }, 600);
+
+        $("body").removeAttr('transition');
+
+
+
         // Chargement de la playlist
         for (var i=0; i<songs.length; i++) {
         		$("<p>").html(songs[i].title + " &#183; " + songs[i].artist).appendTo($("#playlist"));
@@ -153,6 +161,11 @@ $(document).ready(function() {
 		setTimeout( function(){
 			$("#playlist").addClass("show0");
 	    },900);
+
+        //hack of a life time :)
+	    setTimeout( function(){
+			$("#playlist").css("overflow", "auto");
+        },1000);
 	}
 
 	function hidePlaylist() {
@@ -162,6 +175,7 @@ $(document).ready(function() {
 	    // On tourne la pochette
 		setTimeout( function(){
 			$("#cover").removeClass("show90");
+			$("#playlist").css("overflow", "");
 		}, 200);
 
 		setTimeout( function(){
