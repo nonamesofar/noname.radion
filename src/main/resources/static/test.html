@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="js/soundmanager2.js"></script>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="js/wave.js"></script>
+
+</head>
+
+<script>
+soundManager.setup({
+  url: '/path/to/swf-files/',
+  onready: function() {
+    var mySound = soundManager.createSound({
+      id: 'aSound',
+      url: 'http://localhost:8080/listen?id=3'
+    });
+    //mySound.play();
+  },
+  ontimeout: function() {
+    // Hrmm, SM2 could not start. Missing SWF? Flash blocked? Show an error, etc.?
+  }
+});
+</script>
+</body>
+</html>
