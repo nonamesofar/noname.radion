@@ -2,6 +2,8 @@ package noname.fm.controller;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
+import java.util.Random;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,6 +32,24 @@ public class TrackInfoController {
 
     @Autowired
     MusicCollection mCollection;
+
+    private int[] returnedTracks = null;
+
+    @RequestMapping("/nextTrack")
+    @ResponseBody
+    public int getNextTrack(){
+        int length= mCollection.getCollection().size();
+        if(returnedTracks == null){
+            returnedTracks = new int[length];
+        }
+        int index = 0;
+        do{
+            index = (int) (Math.random() * length);
+        }
+        while(returnedTracks[index] != 0);
+        returnedTracks[index] = 1;
+        return index;
+    }
 
     @RequestMapping(value = "/trackInfo", produces = "application/json")
     @ResponseBody

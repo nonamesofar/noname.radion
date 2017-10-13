@@ -186,7 +186,8 @@ wavesurfer.init({
 	height: 80,
 	waveColor: '#e8eaef',
 	progressColor: '#f043a4',
-    backend: 'MediaElement'
+    backend: 'MediaElement',
+    mediaType: 'audio'
 });
 
 
@@ -212,6 +213,7 @@ function playTrack(number){
 // An event handler for when a track is loaded and ready to play.
 wavesurfer.on('ready', function () {
 
+    console.log(document.querySelector('audio').play() != undefined);
 	// Play the track.
 	wavesurfer.play();
 
@@ -281,11 +283,12 @@ wavesurfer.on('seek', function () {
 // Pressing the 'next' button
 // Plays next track in playlist, or if shuffle is on random track.
 $('#next-button').on('click', function () {
-
+    wavesurfer.stop();
 	if (!shuffle) {
 		i++;
 		if (i > playlist.length - 1) {
-			loadTrack(i);
+		    var index = getNextTrack();
+			loadTrack(index);
 		}
 	}
 	else {
@@ -662,9 +665,23 @@ function startPlayerWhenReady(){
 			clearInterval(interval);
 		}
 		else {
-            loadTrack(0);
+		    var i = getNextTrack();
+            loadTrack(i);
 		}
 	},200);
+}
+
+function getNextTrack(){
+    var service="http://localhost:8080/nextTrack";
+    var index;
+    jQuery.ajax({
+        url: service,
+        success: function(html) {
+            index = html;
+        },
+        async:false
+    });
+    return index;
 }
 
 function loadTrack(index){
@@ -672,12 +689,12 @@ function loadTrack(index){
     var song;
     //async until I figure out how I can properyl do this :(
     jQuery.ajax({
-            url: service,
-            success: function(html) {
-              song = html;
-            },
-            async:false
-          });
+        url: service,
+        success: function(html) {
+            song = html;
+        },
+        async:false
+    });
     allTracks.push(song);
     playlist.push(song);
     $('#list').append($(returnTrackHTML(song, playlist.length-1)));

@@ -19,7 +19,7 @@ public class WebController extends WebMvcConfigurerAdapter{
 
     @PostMapping("/")
     public String player(@RequestParam(value="username") String user, @RequestParam(value="password") String pass) {
-        return "player";
+        return "playerV2";
     }
 
     @GetMapping("/player")
