@@ -86,6 +86,8 @@ public class MusicCollection {
         return artCollection.get( i ).getBinaryData();
     }
 
+    public TrackInfo getTrackInfo(int i) {return collection.get(i);}
+
     public List<TrackInfo> getCollection(){
         return collection;
     }

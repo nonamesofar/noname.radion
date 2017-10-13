@@ -1,0 +1,9 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300);
+* {
+  font-family: 'Open Sans Condensed', sans-serif;
+  color: #464646;
+  -webkit-transition: all 1.5s linear;
+  transition: all 1.5s linear;
+  overflow: hidden !important;
+  box-sizing: border-box;
+}

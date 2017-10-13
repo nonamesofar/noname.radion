@@ -24,7 +24,7 @@ public class WebController extends WebMvcConfigurerAdapter{
 
     @GetMapping("/player")
     public String play(){
-        return "player";
+        return "playerV2";
     }
 
 }
