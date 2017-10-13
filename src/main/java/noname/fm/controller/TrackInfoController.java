@@ -43,6 +43,7 @@ public class TrackInfoController {
             returnedTracks = new int[length];
         }
         int index = 0;
+        //TODO: this will loop forever and ever at some point
         do{
             index = (int) (Math.random() * length);
         }
