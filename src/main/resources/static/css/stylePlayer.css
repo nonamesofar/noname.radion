@@ -1,3 +1,10 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300);
+* {
+  font-family: 'Open Sans Condensed', sans-serif;
+  color: #464646;
+  box-sizing: border-box;
+}
+
 html, body {
   height: 100%;
 }
@@ -127,6 +134,7 @@ body #player #playlist span {
 }
 body #player #playlist .active {
   color: #557778;
+
 }
 body #player #infos {
   margin: 15px 0 0 12px;
