@@ -55,6 +55,19 @@ body, html{
 }
 
 /*---------------------------
+	Waveform Section
+----------------------------*/
+.wave{
+    position: relative;
+	width: 100%;
+
+}
+#waveform{
+    height: 100%;
+	width: 100%;
+}
+
+/*---------------------------
 	Cover Art Section
 ----------------------------*/
 
@@ -178,7 +191,7 @@ body, html{
 		Playlist
 ---------------------------*/
 
-#playlist {
+/*#playlist {
 	position: relative;
     left: 25%;
 	display: -webkit-flex;
@@ -186,7 +199,7 @@ body, html{
 	-webkit-flex: 3;
 	flex: 3;
 	text-align: left;
-}
+}*/
 
 /*	Currently playing track details	*/
 

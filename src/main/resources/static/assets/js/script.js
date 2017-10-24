@@ -8,272 +8,51 @@ var allTracks = [],		// An array for all the files loaded in the track
 	lastPlayed = [],	// Array for last played (used when shuffling songs)
 	timer = 0;			// An interval for the track's current time.
 
-
-startPlayerWhenReady();
-
-
-/*---------------------
-	Dropping files
-----------------------*/
-
-var dropZone = $('#drop-zone'),
-	searchInput = $('#searchBox');
-
-$(document).on('dragover', function(event) {
-	event.stopPropagation();
-	event.preventDefault();
-
-	dropZone.removeClass('hidden');
-});
-
-dropZone.on('dragleave', function(event) {
-	event.stopPropagation();
-	event.preventDefault();
-
-	dropZone.addClass('hidden');
-});
-
-dropZone.on('dragover', function(e) {
-	e.stopPropagation();
-	e.preventDefault();
-	e.originalEvent.dataTransfer.dropEffect = 'copy';
-});
-
-// Get file data on drop
-dropZone.on('drop', function(e) {
-	e.stopPropagation();
-	e.preventDefault();
-
-
-	if(e.originalEvent.dataTransfer.items){
-		// For chrome users folder upload is supported
-
-		var items = e.originalEvent.dataTransfer.items;
-		for(var j=0; j<items.length; j++){
-			var item = items[j].webkitGetAsEntry();
-			if(item){
-				traverseFileTree(item);
-			}
-		}
-	}
-	else{
-		// Other browser users have to upload files directly
-
-		var files = e.originalEvent.dataTransfer.files;
-
-		for(var j=0; j<files.length; j++){
-			if(files[j].type.match(/audio\/(mp3|mpeg)/)){
-
-				getID3Data(files[j], function (song) {
-					allTracks.push(song);
-					playlist.push(song);
-					$('#list').append($(returnTrackHTML(song, playlist.length-1)));
-				});
-			}
-		}
-	}
-
-	// If new files are added to existing playlist, cancel search.
-	if(allTracks.length){
-		searchInput.val('');
-		searchInput.trigger('input');
-		temporarySearchPlaylist = [];
-	}
-
-	dropZone.addClass('hidden');
-});
-
-// Recursively get files from folder (works only in chrome).
-function traverseFileTree(item,path) {
-	path = path || "";
-	if(item.isFile){
-		item.file(function(file){
-			if(file.type.match(/audio\/mp3/)){
-				getID3Data(file, function (song) {
-					allTracks.push(song);
-					playlist.push(song);
-					$('#list').append($(returnTrackHTML(song,playlist.length-1)));
-				});
-			}
-		})
-	}
-	else if(item.isDirectory){
-		var dirReader = item.createReader();
-		dirReader.readEntries(function (entries) {
-			for(var j=0; j<entries.length; j++){
-				traverseFileTree(entries[j], path + item.name + "/");
-			}
-		})
-	}
-}
-
-// Generate an object with all the needed information about a track.
-function getID3Data(file, done) {
-
-	getTags(file,function(result){
-
-		result.audioTrack = file;
-		result.playing = false;
-		done(result);
-
-	});
-}
-
-// Get ID3 data tags from file.
-function getTags(file,done){
-
-	var result = {};
-
-	ID3.loadTags(file.name, function() {
-
-		var tags = ID3.getAllTags(file.name);
-
-		result.artist = tags.artist || "Unknown Artist";
-		result.title = tags.title || "Unknown";
-		result.album = tags.album || "";
-		if(tags.picture && tags.picture.data && tags.picture.data.length) {
-			result.picture = tags.picture;
-			getImageSource(result.picture, function (imageSource) {
-				result.picture = imageSource;
-				done(result);
-			});
-		}
-		else {
-			result.picture = 'assets/img/default.png';
-			done(result);
-		}
-
-
-	}, {
-		tags: ["artist", "title", "album", "picture"],
-		dataReader: FileAPIReader(file)
-	});
-
-}
-
-function getImageSource(image, done) {
-	var base64String = "";
-	for (var j = 0; j < image.data.length; j++) {
-		base64String += String.fromCharCode(image.data[j]);
-	}
-	done("data:" + image.format + ";base64," + window.btoa(base64String));
-}
-
-
-function readFile(file,done) {
-
-	var reader = new FileReader();
-
-	reader.onload = function(data){
-		done(data);
-	};
-
-	reader.readAsDataURL(file);
-}
-
-
 /*-------------------
 	Audio player.
  ------------------*/
 
+var searchInput = $('#searchBox');
 
-var wavesurfer = Object.create(WaveSurfer);
+soundManager.setup({
+  url: '/path/to/swf-files/',
+  onready: function() {
+    soundManager.setVolume(50);
+//    $('#container').removeClass('disabled');
+//    var index = getNextTrack();
+//    loadTrack(index);
+//
+//    playTrack(0);
+  },
+  onfinish: function(){
+	$( "#next-button" ).trigger( "click" );
+  },
 
-wavesurfer.init({
-	container: document.querySelector('#wave'),
-	cursorColor: '#aaa',
-	cursorWidth: 1,
-	height: 80,
-	waveColor: '#e8eaef',
-	progressColor: '#f043a4',
-    backend: 'MediaElement',
-    mediaType: 'audio'
+  ontimeout: function() {
+    // Hrmm, SM2 could not start. Missing SWF? Flash blocked? Show an error, etc.?
+  }
 });
 
-
+var mySound;
 // Read file and play it.
 // Takes one parameter - the index of the track we want to play.
-function playTrack(number){
+function showTrackArt(index){
 
-	if(playlist[number] && playlist[i]) {
+    if(playlist[i]){
+        // Set cover art.
 
-		lastPlayed.push(number);
+        if(playlist[i].picture == 'assets/img/default.png'){
+            $('#cover-art-big').css("background", "");
+        }  else{
+            $('#cover-art-big').css("background-image", "url("+ playlist[i].picture +")").css("background-repeat", "no-repeat").css("background-position", "center");
+        }
 
-		wavesurfer.load(playlist[number].audioTrack);
+        $('#cover-art-small').attr('src', playlist[i].picture);
 
-	}
-	// If something went wrong stop playback.
-	else{
-		wavesurfer.stop();
-	}
+        playlist[i].playing = true;
 
+    }
 }
-
-
-// An event handler for when a track is loaded and ready to play.
-wavesurfer.on('ready', function () {
-
-    console.log(document.querySelector('audio').play() != undefined);
-	// Play the track.
-	wavesurfer.play();
-
-	var duration = wavesurfer.getDuration();
-
-	if(playlist[i]){
-		document.title = playlist[i].artist + ' - ' + playlist[i].title;
-
-		// Set cover art.
-
-		if(playlist[i].picture == 'assets/img/default.png'){
-			$('#cover-art-big').css("background", "");
-		}
-		else{
-			$('#cover-art-big').css("background-image", "url("+ playlist[i].picture +")").css("background-repeat", "no-repeat").css("background-position", "center");
-		}
-
-		$('#cover-art-small').attr('src', playlist[i].picture);
-
-		// Show the artist and title.
-		$('#track-desc').html('<b>' + playlist[i].title + '</b> by ' + playlist[i].artist);
-
-		// Show duration of track.
-		$('#current').text('0:00');
-		$('#total').text(formatTime(duration));
-
-		// Show the progress of the track in time.
-		clearInterval(timer);
-		timer = setInterval(function() {
-			$('#current').text(formatTime(wavesurfer.getCurrentTime()));
-		}, 1000);
-
-		// In the playlist array mark the track as currently playing
-		allTracks.forEach(function (tr) {
-			tr.playing = false;
-		});
-		playlist[i].playing = true;
-
-
-		if(temporarySearchPlaylist.length){
-			// If there is a search going on, trigger it again to highlight the right track
-			renderTrackList(temporarySearchPlaylist);
-		}
-		else{
-			// If there isn't a search simply highlight the according element from the .track array
-			$('.track').removeClass('active').eq(i).addClass('active');
-		}
-	}
-
-});
-
-// Event handler when a track finishes playing
-wavesurfer.on('finish', function () {
-	$( "#next-button" ).trigger( "click" );
-});
-
-
-wavesurfer.on('seek', function () {
-	$('#current').text(formatTime(wavesurfer.getCurrentTime()));
-});
 
 
 /*---------------------
@@ -283,7 +62,7 @@ wavesurfer.on('seek', function () {
 // Pressing the 'next' button
 // Plays next track in playlist, or if shuffle is on random track.
 $('#next-button').on('click', function () {
-    wavesurfer.stop();
+
 	if (!shuffle) {
 		i++;
 		if (i > playlist.length - 1) {
@@ -333,15 +112,17 @@ $('#previous-button').on('click', function () {
 });
 
 $('#play-button').on('click', function(){
-	wavesurfer.play();
+    mySound.play();
+
 });
 
 $('#pause-button').on('click', function () {
-	wavesurfer.playPause();
+    mySound.pause();
+
 });
 
 $('#stop-button').on('click', function(){
-	wavesurfer.stop();
+
 });
 
 var saveVolume;
@@ -487,7 +268,7 @@ $('#playlist').on('click', function (e) {
 				}
 				// Playlist is empty, allTracks is empty - deactivate player.
 				else{
-					wavesurfer.empty();
+
 					clearInterval(timer);
 					$('#cover-art-big').css("background", "");
 					$('#cover-art-small').attr('src', 'assets/img/default.png');
@@ -636,9 +417,10 @@ var updateVolume = function (x, vol) {
 
     //update volume bar and video volume
     $('.volumeBar').css('width', percentage + '%');
-    wavesurfer.setVolume(percentage / 100);
 
-    var volValue = percentage / 100;
+
+    var volValue = percentage;
+    soundManager.setVolume(volValue);
 
     //change sound icon based on volume
     if (volValue == 0) {
@@ -754,7 +536,7 @@ function formatTime(time){
 // Wavesurfer responsiveness
 $(window).on('resize', function(){
 	if($('#wave').is(":visible")) {
-		wavesurfer.drawer.containerWidth = wavesurfer.drawer.container.clientWidth;
-		wavesurfer.drawBuffer();
+
+
 	}
 });
