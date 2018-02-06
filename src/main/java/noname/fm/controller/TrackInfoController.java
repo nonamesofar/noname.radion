@@ -44,11 +44,11 @@ public class TrackInfoController {
         }
         int index = 0;
         //TODO: this will loop forever and ever at some point
-        do{
+//        do{
             index = (int) (Math.random() * length);
-        }
-        while(returnedTracks[index] != 0);
-        returnedTracks[index] = 1;
+//        }
+//        while(returnedTracks[index] != 0);
+//        returnedTracks[index] = 1;
         return index;
     }
 
