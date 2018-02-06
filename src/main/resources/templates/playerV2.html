@@ -2,16 +2,27 @@
 <html>
 <head lang="en">
 	<meta charset="UTF-8"/>
-	<title>HTML5 Music Player</title>
-	<link href='assets/css/styles.css' rel='stylesheet' type='text/css'/>
-	<link href='assets/css/volume.css' rel='stylesheet' type='text/css'/>
+	<title>noname.fm</title>
+	<link href='/css/styles.css' rel='stylesheet' type='text/css'/>
 	<link href="/css/bar-ui.css" rel="stylesheet" type="text/css" />
+    <link href="/css/styleLogin.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" href="assets/css/font-awesome-4.3.0/css/font-awesome.min.css"/>
 	<link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon" />
 </head>
 <body>
 
-<div id="container" class="disabled">
+<div id="container" class="container">
+
+    <div class="header">
+        <div class="loading">
+            <div class="block"></div>
+            <div class="block"></div>
+            <div class="block"></div>
+            <div class="block"></div>
+        </div>
+        <h1>noname<span style="color:red">.fm</span></h1>
+        <h2>Discover music!</h2>
+    </div>
 
 	<div id="cover-art">
 		<div id="cover-art-big"></div>
@@ -27,6 +38,12 @@
 
 			<div class="sm2-inline-texture"></div>
 			<div class="sm2-inline-gradient"></div>
+
+            <div class="sm2-inline-element sm2-button-element">
+                <div class="sm2-button-bd">
+                    <div id="track-cover" class="sm2-inline-button sm2-icon-cover"/>
+                </div>
+            </div>
 
 			<div class="sm2-inline-element sm2-button-element">
 				<div class="sm2-button-bd">
@@ -106,59 +123,10 @@
 
 	</div>
 
-    <!--<div id="loading_bar_container">-->
-        <!--<div id="loading_bar">-->
-            <!--<div id="buffer" style="width:40%"></div>-->
-            <!--<div id="progress" style="width:10.5%"></div>-->
-        <!--</div>-->
-    <!--</div>-->
-
-
-
-	<!--<div id="control-bar">-->
-
-		<!--<div class="player-control">-->
-			<!--<div id="previous-button" title="Previous"><i class="fa fa-fast-backward"></i></div>-->
-			<!--<div id="play-button" title="Play"><i class="fa fa-play"></i></div>-->
-			<!--<div id="pause-button" title="Pause"><i class="fa fa-pause"></i></div>-->
-			<!--&lt;!&ndash;<div id="stop-button" title="Stop"><i class="fa fa-stop"></i></div>&ndash;&gt;-->
-			<!--<div id="next-button" title="Next"><i class="fa fa-fast-forward"></i></div>-->
-			<!--<div id="volume-button" title="Volume Off" class="active"><i class="fa fa-volume-up"></i></div>-->
-			<!--<div class="volume" title="Set volume">	<span class="volumeBar"></span></div>-->
-		<!--</div>-->
-
-		<!--<div id="playlist">-->
-
-			<!--<div id="track-details" title="Show playlist">-->
-				<!--<i class="fa fa-sort"></i>-->
-				<!--<p id="track-desc">There are no tracks loaded in the player.</p>-->
-				<!--<p id="track-time">-->
-					<!--<span id="current">-</span> / <span id="total">-</span>-->
-				<!--</p>-->
-			<!--</div>-->
-
-			<!--<div id="expand-bar" class="hidden">-->
-
-				<!--<form>-->
-					<!--<label for="searchBox">Search</label>-->
-					<!--<div>-->
-						<!--<input id="searchBox" type="search" name="search"/>-->
-					<!--</div>-->
-				<!--</form>-->
-				<!--<ul id="list"></ul>-->
-			<!--</div>-->
-
-		<!--</div>-->
-
-	<!--</div>-->
-
-	<!--<div id="drop-zone" class="hidden">Drag &amp; Drop Files Here</div>-->
-
 </div>
 
-<script src="assets/js/jquery-1.11.2.min.js"></script>
+<script src="js/jquery-1.11.2.min.js"></script>
 <script src="js/soundmanager2.js"></script>
-<!--<script src="assets/js/script.js"></script>-->
 <script src="js/bar-ui.js"></script>
 </body>
 </html>

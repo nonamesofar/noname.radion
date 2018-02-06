@@ -5,6 +5,20 @@
  * Code provided under BSD license.
  * http://schillmania.com/projects/soundmanager2/license.txt
  */
+@import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300);
+ * {
+   font-family: 'Open Sans Condensed', sans-serif;
+   color: #fcf9f9;
+   -webkit-transition: all 1.5s linear;
+   transition: all 1.5s linear;
+   box-sizing: border-box;
+ }
+
+.playArt{
+ 	width: 40%;
+ 	border-radius: 3px;
+ 	vertical-align: middle;
+ }
 
 .sm2-bar-ui {
  position: relative;
@@ -261,7 +275,7 @@
 
 .sm2-bar-ui {
  /* base font size */
- font-size: 20px;
+ font-size: 25px;
  text-shadow: none;
 }
 
@@ -564,6 +578,13 @@
 .sm2-icon-previous {
  background-image: url(../image/icomoon/entypo-25px-ffffff/PNG/first.png);
  background-image: none, url(../image/icomoon/entypo-25px-ffffff/SVG/first.svg);
+}
+
+.sm2-icon-cover {
+ background-image: url(../assets/img/default.png);
+ background-image: none, url(../assets/img/default.png);
+  background-size: 100%;
+  background-position: 54% 51%;
 }
 
 .sm2-icon-next {

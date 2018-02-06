@@ -113,6 +113,9 @@
             }
 
             $('#cover-art-small').attr('src', artwork[index]);
+            $('#track-cover').css("background-image", "url("+ artwork[index] +")");
+
+
         }
     }
 
@@ -137,10 +140,9 @@
       }
     }
 
-    //get a random track
-    //var index = getNextTrack();
-    //loadTrack(index);
-    //showTrackArt(0);
+        setTimeout( function(){
+            $('.container').addClass('loaded');
+        }, 600);
   });
 
   /**
